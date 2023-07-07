@@ -329,7 +329,20 @@ class Connection
             default:
                 throw new ConnectionException("Division mode '$mode' unknown.");
         }
-
+        if(isset($website->db_host)){
+            $clone['host'] =  $website->db_host;
+            $clone['port'] = $website->db_port??'3306';
+        }
+        if(isset($website->db_user)){
+            $clone['username'] =  $website->db_user;
+        }
+        if(isset($website->db_pass)){
+            $clone['password'] =  $website->db_pass;
+        }
+        if(isset($website->db_name)){
+            $clone['database'] =  $website->db_name;
+        }
+        
         $this->emitEvent(new Events\Database\ConfigurationLoaded($clone, $this, $website));
 
         return $clone;
