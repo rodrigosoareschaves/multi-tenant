@@ -140,8 +140,8 @@ class Connection
     public function set($to, $connection = null): bool
     {
         $connection = $connection ?? $this->tenantName();
-
         $website = $this->convertWebsiteOrHostnameToWebsite($to);
+        
 
         $existing = $this->configuration($connection);
 
@@ -304,6 +304,7 @@ class Connection
             'database.connections.%s',
             $website->managed_by_database_connection ?? $this->systemName()
         ));
+        
 
         $mode = config('tenancy.db.tenant-division-mode');
 
@@ -329,6 +330,7 @@ class Connection
             default:
                 throw new ConnectionException("Division mode '$mode' unknown.");
         }
+
         if(isset($website->db_host)){
             $clone['host'] =  $website->db_host;
             $clone['port'] = $website->db_port??'3306';
@@ -337,14 +339,27 @@ class Connection
             $clone['username'] =  $website->db_user;
         }
         if(isset($website->db_pass)){
-            $clone['password'] =  $website->db_pass;
+            if(!empty(env('TENANTS_ENCRYPTION_KEY'))){
+                $clone['password'] =  $this->decryptCpanelPassword($website->db_pass);
+            }else{
+                $clone['password'] =  ($website->db_pass);
+            }
         }
         if(isset($website->db_name)){
             $clone['database'] =  $website->db_name;
         }
         
+        
         $this->emitEvent(new Events\Database\ConfigurationLoaded($clone, $this, $website));
 
         return $clone;
+    }
+     public function decryptCpanelPassword($encryption){
+        $ciphering = "AES-128-CTR";
+        $options = 0;
+        $decryption_iv = env('TENANTS_ENCRYPTION_IV','1234567890');
+        $decryption_key = env('TENANTS_ENCRYPTION_KEY','crypto_key');
+        $decryption=openssl_decrypt ($encryption, $ciphering, $decryption_key, $options, $decryption_iv);
+        return $decryption;
     }
 }
