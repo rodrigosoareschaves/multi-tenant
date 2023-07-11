@@ -22,7 +22,7 @@ class TenancyWebsites extends AbstractMigration
 
     public function up()
     {
-        Schema::create('websites', function (Blueprint $table) {
+        Schema::create('tenant_websites', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('uuid');
@@ -34,6 +34,6 @@ class TenancyWebsites extends AbstractMigration
 
     public function down()
     {
-        Schema::dropIfExists('websites');
+        Schema::dropIfExists('tenant_websites');
     }
 }
