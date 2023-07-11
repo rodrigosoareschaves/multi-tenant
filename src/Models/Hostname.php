@@ -37,7 +37,7 @@ class Hostname extends SystemModel implements HostnameContract
     use SoftDeletes;
 
     protected $dates = ['under_maintenance_since'];
-
+    protected $table = 'tenant_hostnames';
     public function website(): BelongsTo
     {
         return $this->belongsTo(config('tenancy.models.website'));
