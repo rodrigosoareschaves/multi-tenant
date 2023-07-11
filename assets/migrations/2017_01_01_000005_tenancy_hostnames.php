@@ -22,7 +22,7 @@ class TenancyHostnames extends AbstractMigration
 
     public function up()
     {
-        Schema::create('hostnames', function (Blueprint $table) {
+        Schema::create('tenants_hostnames', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('fqdn')->unique();
@@ -40,6 +40,6 @@ class TenancyHostnames extends AbstractMigration
 
     public function down()
     {
-        Schema::dropIfExists('hostnames');
+        Schema::dropIfExists('tenants_hostnames');
     }
 }
