@@ -31,8 +31,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Website extends SystemModel implements WebsiteContract
 {
+    
     use SoftDeletes;
-
+    protected $table='tenant_websites';
     public function hostnames(): HasMany
     {
         return $this->hasMany(config('tenancy.models.hostname'));
