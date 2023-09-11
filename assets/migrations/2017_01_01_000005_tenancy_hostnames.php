@@ -22,7 +22,7 @@ class TenancyHostnames extends AbstractMigration
 
     public function up()
     {
-        Schema::create('tenants_hostnames', function (Blueprint $table) {
+        Schema::create('tenant_hostnames', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('fqdn')->unique();
@@ -34,12 +34,12 @@ class TenancyHostnames extends AbstractMigration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('website_id')->references('id')->on('websites')->onDelete('set null');
+            $table->foreign('website_id')->references('id')->on('tenant_websites')->onDelete('set null');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('tenants_hostnames');
+        Schema::dropIfExists('tenant_hostnames');
     }
 }
